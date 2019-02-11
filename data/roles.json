@@ -1,0 +1,49 @@
+{
+  "spe": [
+    " | ", "\n"
+  ],
+  "readyToSend":{
+    "divertissements": "false",
+    "candidature": "false"
+  },
+  "jeux": [
+    {"info":["🎵", "OSU!  Player 🎮", "235116522685595648" ]},
+    {"info":[ "💵", "GTA  Player 🎮", "269215157119352833" ]},
+    {"info":[ "🔫", "CS  Player 🎮", "272401884239626240" ]},
+    {"info":[ "⛏", "Minecraft  Player 🎮", "272462566146441217" ]},
+    {"info":[ "💣", "Battlefield  Player 🎮", "276364310345678848" ]},
+    {"info":[ "🎯", "Overwatch  Player 🎮", "278252785072603137" ]},
+    {"info":[ "🐺", "Loup Garou Player 🎮", "422483301001986068" ]},
+    {"info":[ "🍖", "Ark  Player 🎮", "332678176943767553" ]},
+    {"info":[ "👊", "Brawlhalla  Player 🎮", "283584358189760533" ]},
+    {"info":[ "⚔", "League Of Legends  Player 🎮", "295309969107189761" ]},
+    {"info":[ "📜", "Heartstone  Player 🎮", "310464414828724226" ]},
+    {"info":[ "🚙", "Rocket League  Player 🎮", "323580249633718284" ]},
+    {"info":[ "🌙", "Destiny2  Player 🎮", "352479123991691264" ]},
+    {"info":[ "🔨", "Fortnite  Player 🎮", "382241513125707778" ]},
+    {"info":[ "🛡", "Rainbow six  Player 🎮", "396661268171325451" ]},
+    {"info":[ "☠", "PUBG  Player 🎮", "400685561079136258" ]},
+    {"info":[ "🦋", "Wakfu  Player 🎮", "457974720118259713" ]},
+    {"info":[ "🐉", "Dofus  Player 🎮", "451384993751760898" ]}
+  ],
+  "divertissements": [
+    {"info":[ "💤", "Insomniaque 💤 ", "300427046625083393" ]},
+    {"info":[ "📘", "Otaku ! 📘", "311548443178958848" ]},
+    {"info":[ "💻", "Dev 💻", "250707078832717825" ]},
+    {"info":[ "⚽", "Beauf ⚽", "287904630300737536" ]},
+    {"info":[ "😡", "Rageux 😡", "293859931554185217" ]},
+    {"info":[ "📹", "Streamer 📹", "282620512356532224" ]}
+  ],
+  "candidature": [
+    {"info":[ "🔒", "V.I.P🔒", "420705484060885004" ],
+    "msg":"Pour cela tu dois inviter 10 personnes au minimum. Contacte un membre du staff une fois que cela est fait."},
+    {"info":[ "💪", "Helpers 💪", "353980038212747264" ],
+    "msg":"Pour cela le staff doit accepter 3 de tes propositions / améliorations."},
+    {"info":["☕", "Stagiaire ☕ ", "462263166085365770"],
+    "msg":"Si tu souhaites voir comment ça se passe au sein du staff de WAG, fait une demande à un administrateur pour obtenir une période d'essai !"},
+    {"info":[ "⚡", "Animateur ⚡", "449549366227763200" ],
+    "msg":"Pour cela, il est nécessaire de faire une candidature avec les raisons pour lesquelles tu veux devenir animateur ainsi qu'une bref présentation de ta part."},
+    {"info":["💼", "Managers 💼", "512992984535400449"],
+    "msg":"Pour cela tu dois avoir beaucoup de serveur actif pour rependre des partenariats et faire du recrutement"}
+  ]
+}

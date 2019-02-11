@@ -1,0 +1,5 @@
+# Dossier ignoré
+node_modules/
+
+# fichier ignoré
+data/secrets.json
