@@ -1,4 +1,4 @@
-const lRole = require("./data/roles.json");
+const lRole = require("./../data/roles.json");
 const interval = 1200;
 let time = 0;
 exports.jeux = function (Discord, channel){

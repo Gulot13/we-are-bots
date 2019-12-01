@@ -1,3 +1,4 @@
+"use strict";
 module.exports = (me, msg) => {
 
   if (msg.mentions.users.first() == me.user) {
@@ -5,7 +6,7 @@ module.exports = (me, msg) => {
   }
 
   // Ignore all bots
-  if (msg.author.bot) return;
+    if (msg.author.bot) return;
 
   // Ignore msgs not starting with the prefix (in config.json)
   if (msg.content.indexOf(me.config.prefix) !== 0) return;
@@ -25,4 +26,5 @@ module.exports = (me, msg) => {
 
   // Run the command
   cmd.run(me, msg, args);
+
 };

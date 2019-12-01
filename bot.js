@@ -1,30 +1,51 @@
 #!/usr/bin/env node
+"use strict";
 try {
 	// Déclaration des fichiers du bot
-	const authToken = require("./data/secrets.json"),
+		const authToken = require("./data/secrets.json"),
 		config = require("./data/config.json"), // Configuration et raccourcis des appels du code
 		Discord = require("discord.js"),
-		roleJs = require("./role.js"),
+		roleJs = require("./exports/role.js"),
 		Enmap = require("enmap"),
 		fs = require("fs"),
 		prefix = config.prefix,
 		request = require("request"),
-		//mysql = require("mysql"),
+		mysql = require("mysql"),
 		Cleverbot = require("cleverbot-node"),
-		me = new Discord.Client();
+		me = new Discord.Client(),
 		me.config = config;
 
 
-		/*try {
-			const BotDb = mysql.createConnection({
-				host: authToken.db.host,
-				user: authToken.db.user,
-				password: authToken.db.password,
-				database: authToken.db.database
-			});
-		} catch (e) {
-			ErreurTryCatch(e, "Connection a la base de donnée")
-		}*/
+		class Database {
+			constructor(config) {
+				this.connection = mysql.createConnection(config);
+				//this.connection.connect();
+			}
+			query(sql, args) {
+				return new Promise((resolve, reject) => {
+					this.connection.query(sql, args, (err, rows) =>{
+						if (err) return reject(err);
+						resolve(rows);
+					});
+				});
+			}
+			close() {
+				return new Promise((resolve, reject) =>{
+					this.connection.end(err => {
+						if (err) return reject(err);
+						resolve();
+					});
+				});
+			}
+		}
+		const db = new Database({
+			host: 'localhost',
+			user: 'root',
+			password: '',
+			database: 'test',
+			connectionLimit: 5
+		});
+
 
 		// exemple pris sur https://anidiots.guide/first-bot/a-basic-command-handler
 
@@ -51,17 +72,53 @@ try {
 		});
 
 		me.on('ready', () => {
-			chann = me.guilds.get(me.config.wagID).channels.get(me.config.cRoleID);
+			let chann = me.guilds.get(me.config.wagID).channels.get(me.config.cRoleID);
 			chann.bulkDelete(10); // Suppression de 10 messages dans le channel(id) "config.cRoleID"
 			roleJs.jeux(Discord, chann);
 			roleJs.divertissements(Discord, chann);
 			roleJs.candidature(Discord, chann);
+			db.query("CREATE TABLE IF NOT EXSIT level (id CHAR(18) PRIMARY KEY NOT NULL, level INT,	xp INT)").then(rows => {
+				console.log("creation de la table...1");
+			}, err => {
+				console.log("Une erreur est survenue 1: " + err);
+			});
+			db.query("CREATE TABLE IF NOT EXSIT calavantcmd (id CHAR(18) PRIMARY KEY NOT NULL, lastMsg TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)").then(rows => {
+				console.log("creation de la table...2");
+			}, err => {
+				console.log("Une erreur est survenue 2: " + err);
+			});
 		});
 
 		me.on('message', msg => {
 
 		  msg.content = msg.content.toLowerCase();
 			let args = msg.content.split(' ');
+
+			if (!cooldownChat.has(msg.author.id)) {
+					giveXp(msg.author.id, rdn(15, 25), msg)
+					cooldownChat.add(msg.author.id);
+					setTimeout(() => {
+							cooldownChat.delete(msg.author.id);
+				}, 60000);
+			}
+			if (msg.content.startsWith(prefix + "daily")) {
+				db.query(`SELECT id, UNIX_TIMESTAMP(lastMsg) as lastMsg FROM calavantcmd WHERE id='${msg.author.id}'`).then(rows => {
+					let day = new Date();
+					let unix = Math.round((new Date()).getTime() / 1000);
+					let xp = 300 * (day.getUTCDate() / 5);
+					if (rows.length>0){
+						if (unix - rows[0].lastMsg > 24*3600){
+							msg.reply("Tu as reçu ton XP journalière.");
+							giveXp(msg.author.id, xp, msg);
+						} else msg.reply("La commande est autorisé une fois toute les 24h.");
+					} else {
+						db.query(`INSERT INTO calavantcmd (id) VALUES ('${msg.author.id}');`).then(() =>{
+							msg.reply("Tu as reçu ton XP journalière.");
+							giveXp(msg.author.id, xp, msg);
+						});
+					}
+				});
+			}
 
 		  /*=======================================
 			=======        Partenariat        =======
@@ -132,4 +189,18 @@ function ErreurTryCatch (erreur, operation) {
 	console.log("Une s'est erreur produite erreur lors de l'opération: "+operation+".\nPlus de détails ci-dessous");
 	console.log(erreur);
 	process.exit(1);
+}
+
+function giveXp(id, xp, msg) {
+	db.query(`SELECT id, level, xp FROM level WHERE id='${id}'`).then(rows => {
+		console.log(rows);
+		if (rows.length>0){
+			xp = xp + rows[0].xp;
+			let lvl = xp >= xpOfLvl(rows[0].level+1) ? rows[0].level+1 : rows[0].level;
+			if (lvl>rows[0].level) msg.channel.send(`Bien joué à toi ${msg.author.username}, tu es passé level ${lvl} ! Continue ainsi !`);
+			db.query(`UPDATE level SET xp=${xp}, level=${lvl} WHERE id='${id}'`);
+		} else {
+			db.query(`INSERT INTO level VALUES ('${id}', 0, ${xp})`);
+		}
+	});
 }
